@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# TypeScript compiled files
+dist/
+build/
+
+# npm error logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment files
+.env
+
+# Yarn cache directory
+.yarn-cache/
+
+# Editor configuration
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Log and package files
+*.log
+*.sql
+*.sqlite
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# System generated files
+*.swp
+*~
