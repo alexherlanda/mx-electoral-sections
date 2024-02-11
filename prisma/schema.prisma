@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+
+model State {
+  id                Int                @id
+  name              String
+  municipalities    Municipality[]
+  federalDistricts  FederalDistrict[]
+  localDistricts    LocalDistrict[]
+  electoralSections ElectoralSection[]
+
+  @@map("state")
+}
+
+model Municipality {
+  id                Int                @id
+  stateId           Int
+  alias             Int
+  name              String
+  state             State              @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  localities        Locality[]
+  electoralSections ElectoralSection[]
+
+  @@map("municipality")
+}
+
+model Locality {
+  id             Int          @id @default(autoincrement())
+  municipalityId Int
+  alias          Int
+  name           String
+  type           String
+  municipality   Municipality @relation(fields: [municipalityId], references: [id], onDelete: Cascade)
+
+  @@map("locality")
+}
+
+model FederalDistrict {
+  id                Int                @id @default(autoincrement())
+  stateId           Int
+  alias             Int
+  head              String
+  state             State              @relation(fields: [stateId], references: [id])
+  electoralSections ElectoralSection[]
+
+  @@map("federal_district")
+}
+
+model LocalDistrict {
+  id                Int                @id @default(autoincrement())
+  stateId           Int
+  alias             Int
+  state             State              @relation(fields: [stateId], references: [id])
+  electoralSections ElectoralSection[]
+
+  @@map("local_district")
+}
+
+model ElectoralSection {
+  id                Int              @id @default(autoincrement())
+  section           Int
+  federalDistrictId Int?
+  localDistrictId   Int?
+  municipalityId    Int
+  stateId           Int
+  federalDistrict   FederalDistrict? @relation(fields: [federalDistrictId], references: [id], onDelete: SetNull)
+  localDistrict     LocalDistrict?   @relation(fields: [localDistrictId], references: [id], onDelete: SetNull)
+  municipality      Municipality     @relation(fields: [municipalityId], references: [id])
+  state             State            @relation(fields: [stateId], references: [id])
+
+  @@map("electoral_section")
+}

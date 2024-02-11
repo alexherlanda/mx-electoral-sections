@@ -1,25 +1,20 @@
-version: "3.8"
+version: '3.3'
 services:
   postgres:
-    image: postgres:15
+    image: postgres:13
     environment:
-      POSTGRES_DB: secciones_electorales
-      POSTGRES_USER: alexis
-      POSTGRES_PASSWORD: admin123
+      - POSTGRES_DB=electoral
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4:6.8
+    image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@mail.com
-      PGADMIN_DEFAULT_PASSWORD: root
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
     ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-
-volumes:
-  postgres_data:
+      - 5050:80

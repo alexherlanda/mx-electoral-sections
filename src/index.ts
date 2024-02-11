@@ -1,6 +1,6 @@
 import express from 'express';
 import { environmentVariables, isProduction } from './libs/environment/environment';
-import sequelize from './database/sequelize';
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const PORT = environmentVariables.port;
@@ -9,15 +9,18 @@ app.get('/', (req, res) => {
   res.send('Hello world!');
 });
 
+const prisma = new PrismaClient();
+
 app.listen(PORT, async () => {
   console.log(`Running in http://localhost:${PORT}`);
   if (!isProduction) {
     console.log(`Happy hacking! This are the environment variables:`, environmentVariables);
     try {
-      await sequelize.authenticate();
-      console.log('Connection to the database has been established successfully.');
+      await prisma.$connect();
+      console.log('Conexión exitosa a la base de datos.');
+      await prisma.$disconnect();
     } catch (error) {
-      console.error('Unable to connect to the database:', error);
+      console.error('Error al conectar a la base de datos:', error);
     }
   }
 });
